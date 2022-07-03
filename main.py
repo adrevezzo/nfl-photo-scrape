@@ -1,17 +1,14 @@
 import requests
 from bs4 import BeautifulSoup
-
-# url = 'https://www.nfl.com/players/active/a'
-# url = 'https://www.nfl.com/players/active/a?query=a&after=c2ltcGxlLWN1cnNvcjk5'
+import os.path
 
 alph = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v',
         'w', 'x', 'y', 'z']
 
 url_ext = ['','c2ltcGxlLWN1cnNvcjk5','c2ltcGxlLWN1cnNvcjE5OQ=='],
 
-
-
 for let in alph:
+    print(let)
 
     for link in url_ext:
         try:
@@ -31,10 +28,21 @@ for let in alph:
                 if rows[i].find_all('source'):
                     link = (rows[i].find_all('source')[2])['srcset'].split(' ')[4].strip()
                     name = rows[i].text.strip()
+                    i=1
+                    while name in img_dict:
+                       name = f'{name}_v{i}'
+                       i += 1
+
                     img_dict[name] = link
 
             for player,head_link in img_dict.items():
                 fname = player
+                # i = 1
+                # while os.path.exists(fname+'.png'):
+                #     print(f"{player} Exists")
+                #     fname = f'{player}_v{i}'
+                #     i += 1
                 with open(fname + '.png','wb') as f:
                     im = requests.get(head_link)
                     f.write(im.content)
+
