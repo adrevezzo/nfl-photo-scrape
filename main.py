@@ -26,7 +26,8 @@ for let in alph:
             for i in range(len(rows)):
                 # print(i)
                 if rows[i].find_all('source'):
-                    link = (rows[i].find_all('source')[2])['srcset'].split(' ')[4].strip()
+                    link = (rows[1].find_all('source'))[0]['srcset'].split(' ')[0].strip()
+                    link = link.replace('t_lazy/', '')
                     name = rows[i].text.strip()
                     i=1
                     while name in img_dict:
@@ -45,4 +46,20 @@ for let in alph:
                 with open(fname + '.png','wb') as f:
                     im = requests.get(head_link)
                     f.write(im.content)
+
+
+# Debugging Code
+# url = f'https://www.nfl.com/players/active/a?query=''&after='''
+# data = requests.get(url)
+# soup = BeautifulSoup(data.text, 'html.parser')
+# rows = soup.find_all(class_="d3-o-media-object")
+#
+# link = (rows[1].find_all('source'))[0]['srcset'].split(' ')[0].strip()
+# link = link.replace('t_lazy/','')
+# print(link)
+#
+# with open('test.png','wb') as f:
+#     im = requests.get(link)
+#     f.write(im.content)
+
 
