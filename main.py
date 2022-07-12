@@ -26,7 +26,7 @@ for let in alph:
             for i in range(len(rows)):
                 # print(i)
                 if rows[i].find_all('source'):
-                    link = (rows[1].find_all('source'))[0]['srcset'].split(' ')[0].strip()
+                    link = (rows[i].find_all('source'))[0]['srcset'].split(' ')[0].strip()
                     link = link.replace('t_lazy/', '')
                     name = rows[i].text.strip()
                     i=1
