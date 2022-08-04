@@ -1,51 +1,58 @@
 import requests
 from bs4 import BeautifulSoup
 import os.path
+from players import players
 
-alph = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v',
-        'w', 'x', 'y', 'z']
+# alph = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v',
+#         'w', 'x', 'y', 'z']
 
-url_ext = ['','c2ltcGxlLWN1cnNvcjk5','c2ltcGxlLWN1cnNvcjE5OQ=='],
+# url_ext = ['','c2ltcGxlLWN1cnNvcjk5','c2ltcGxlLWN1cnNvcjE5OQ==']
 
-for let in alph:
-    print(let)
+img_dict = {}
 
-    for link in url_ext:
-        try:
-            url = f'https://www.nfl.com/players/active/{let}?query={let}&after={link}'
-            data = requests.get(url)
+for let in players:
 
-        except:
-            continue
+    try:
+        # url = f'https://www.nfl.com/players/active/{let}?query={let}&after={link}'
+        url = f'https://www.nfl.com/players/active/all?query={let}'
+        data = requests.get(url)
 
-        finally:
-            soup = BeautifulSoup(data.text, 'html.parser')
-            rows = soup.find_all(class_="d3-o-media-object")
-            img_dict = {}
+    except:
+        continue
 
-            for i in range(len(rows)):
-                # print(i)
-                if rows[i].find_all('source'):
-                    link = (rows[i].find_all('source'))[0]['srcset'].split(' ')[0].strip()
-                    link = link.replace('t_lazy/', '')
-                    name = rows[i].text.strip()
-                    i=1
-                    while name in img_dict:
-                       name = f'{name}_v{i}'
-                       i += 1
+    finally:
+        soup = BeautifulSoup(data.text, 'html.parser')
+        rows = soup.find_all(class_="d3-o-media-object")
 
-                    img_dict[name] = link
 
-            for player,head_link in img_dict.items():
-                fname = player
-                # i = 1
-                # while os.path.exists(fname+'.png'):
-                #     print(f"{player} Exists")
-                #     fname = f'{player}_v{i}'
-                #     i += 1
-                with open(fname + '.png','wb') as f:
-                    im = requests.get(head_link)
-                    f.write(im.content)
+        for i in range(len(rows)):
+            # print(i)
+            if rows[i].find_all('source'):
+                link = (rows[i].find_all('source'))[0]['srcset'].split(' ')[0].strip()
+                link = link.replace('t_lazy/', '')
+                name = rows[i].text.strip()
+                # print(name)
+                i=1
+                while name in img_dict:
+                   name = f'{name}_v{i}'
+                   i += 1
+
+                img_dict[name] = link
+
+for player,head_link in img_dict.items():
+    fname = player
+    # i = 1
+    # while os.path.exists(fname+'.png'):
+    #     print(f"{player} Exists")
+    #     fname = f'{player}_v{i}'
+    #     i += 1
+
+    try:
+        with open(fname + '.png','wb') as f:
+            im = requests.get(head_link)
+            f.write(im.content)
+    except:
+        continue
 
 
 # Debugging Code
