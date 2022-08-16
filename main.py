@@ -1,16 +1,19 @@
 import requests
 from bs4 import BeautifulSoup
 import os.path
-from players import players
+from players import PlayerList
 
 # alph = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v',
 #         'w', 'x', 'y', 'z']
 
 # url_ext = ['','c2ltcGxlLWN1cnNvcjk5','c2ltcGxlLWN1cnNvcjE5OQ==']
+players = PlayerList('C:/Users/adamr/OneDrive/Documents/Work/Portfolio Projects/fantasy-football-website/website/player_csv.csv')
+
 
 img_dict = {}
 
-for let in players:
+for let in players.players:
+    print(let)
 
     try:
         # url = f'https://www.nfl.com/players/active/{let}?query={let}&after={link}'
